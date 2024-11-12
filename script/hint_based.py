@@ -228,8 +228,8 @@ if __name__ == "__main__":
     itf = TextInterface(
         model="GLM-4-Flash",
         task_name="gsm8k",
-        api_key="bc0a69b8020ae8e8ff93371a92578157.ekxxgGikiLrw1Xh3",
-        base_url="https://open.bigmodel.cn/api/paas/v4/",
+        api_key="api_key",
+        base_url="base_url",
         visitType="OpenAI_compa",
         extract_answer=answer_cleaning
     )

@@ -20,8 +20,8 @@ if __name__ == "__main__":
     itf = TextInterface(
         model="gpt-4o-mini",
         task_name="mgsm_en",
-        api_key="sk-LsPtaw73IsljGW9UxBXAxeQjOaIX6ErgULaa0jOltVy8YMRU",
-        base_url="https://api.wlai.vip/v1",
+        api_key="api_key",
+        base_url="base_url",
         visitType="OpenAI_compa",
         extract_answer=answer_cleaning
     )
