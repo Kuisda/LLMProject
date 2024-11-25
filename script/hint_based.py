@@ -225,11 +225,16 @@ if __name__ == "__main__":
     
     preds = []
     preds_ans = []
+
+    with open("secret.json", 'r') as f:
+        data = json.load(f)
+
+    
     itf = TextInterface(
-        model="GLM-4-Flash",
-        task_name="gsm8k",
-        api_key="api_key",
-        base_url="base_url",
+        model="gpt-4o-mini",
+        task_name="mgsm_en",
+        api_key=data['api_key'],
+        base_url=data['base_url'],
         visitType="OpenAI_compa",
         extract_answer=answer_cleaning
     )

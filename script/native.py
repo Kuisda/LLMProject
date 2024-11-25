@@ -1,7 +1,5 @@
 from tqdm import tqdm
-
-
-import http.client
+import json
 import sys
 sys.path.append("..")
 from utils import *
@@ -15,13 +13,16 @@ if __name__ == "__main__":
     preds = []
     preds_ans = []
     
-    # ask llm to get answer
+
+    with open("secret.json", 'r') as f:
+        data = json.load(f)
+
     
     itf = TextInterface(
         model="gpt-4o-mini",
         task_name="mgsm_en",
-        api_key="api_key",
-        base_url="base_url",
+        api_key=data['api_key'],
+        base_url=data['base_url'],
         visitType="OpenAI_compa",
         extract_answer=answer_cleaning
     )
