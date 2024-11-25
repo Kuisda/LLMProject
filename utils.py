@@ -171,13 +171,17 @@ def getPredAndWrite(
         itf:TextInterface,
         questions:List[str],
         groundTruth:List[str],
+        call_fn:Optional[Callable[[str], str]] = None,
         format_instruction = "\nYour final answer should be a single numerical number, put the number at the end of your whole response with format like:'Answer: [final answer]'",
         begin:int=0)->str:
     '''
     对每一道题目发送请求，获取结果，并写入文件夹
     这么做的原因是因为请求可能中断或者出问题，此时方便按照题号进行接下来的题目处理，而不用重新跑
-    如果出现了请求断流，需要把属于同一个问题集的数据汇总在同一个jsonl文件中，并以这个文件作为filepath
+    如果出现了请求断流,需要把属于同一个问题集的数据汇总在同一个jsonl文件中,并以这个文件作为filepath
+    call_fn抽象了各种规划方式,方法接受一个问题prompt,
     '''
+    if call_fn is None:
+        call_fn = itf.call
     now = datetime.datetime.now()
     timestamp_str = now.strftime('%Y-%m-%d-%H-%M-%S')
     filePath = f'../result/{itf.task_name}_{itf.model}_{timestamp_str}.jsonl'
@@ -191,7 +195,7 @@ def getPredAndWrite(
             question = questions[i]
             gt = groundTruth[i]
             prompt = question + format_instruction
-            pred = itf.call(prompt=prompt)
+            pred = call_fn(prompt)
             # pred_ans = itf.extract_answer(pred)
             # gt_clean = itf.extract_answer(gt)
             # tmp = {'Question':question,'Pred':pred,'Pred_ans':pred_ans,'GT':gt,'GT_clean':gt_clean}
@@ -215,12 +219,13 @@ def readFromJsonl(filePath:str):
     
     return preds,gt
 
-def PostHandle(task:str,preds:List[str],gt:List[str]):
+def PostHandle(task_name:str,preds:List[str],gt:List[str]):
     '''
     use answer_cleaning as rule in task to two list : preds and gt and then return
+    task_name: ["gsm8k","mgsm_en"]
     '''
-    preds = [answer_cleaning(task,s) for s in preds]
-    gt    = [answer_cleaning(task,s) for s in gt]
+    preds = [answer_cleaning(task_name,s) for s in preds]
+    gt    = [answer_cleaning(task_name,s) for s in gt]
 
     return preds,gt
 

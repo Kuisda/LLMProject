@@ -74,6 +74,7 @@ class TextInterface:
             # print(completion)
             gen = completion.choices[0].message.content
         else:
+            self.history += [{"role":"user","content":prompt}]
             completion = self.client.chat.completions.create(
                 model = self.model,
                 messages=self.history,
@@ -87,7 +88,7 @@ class TextInterface:
         self.history += [{"role":"assistant","content":gen}]
         return gen
     
-    def restrict_call(self, rule:str,prompt:str, restriction:List[str],retry:int = 16)->str:
+    def restrict_call(self, meta_prompt:str,prompt:str, restriction:List[str],retry:int = 16)->str:
         '''
         设置合法输出，并且使用多次请求保证一定会得到一个合法输出
     for example:
@@ -110,7 +111,7 @@ class TextInterface:
                 model=self.model,
                 messages=[
                     {"role": "system", "content": "YOU ARE one of the GREATEST mathematicians, logicians, programmers, and AI scientists. You are intelligent and rational. You are prudent and cautious. Your mastery over Arithmetic, Combinatorics, Number Theory, Probability Theory, Algebra, Analysis, and Geometry is unparalleled. You THINK NATURAL, BROAD AND DEEP. Let's think step by step. "},
-                    {"role":"system","content":rule},
+                    {"role":"system","content":meta_prompt},
                     {"role": "user", "content": prompt}
                 ]
             )
