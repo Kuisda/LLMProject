@@ -191,7 +191,7 @@ def getPredAndWrite(
             question = questions[i]
             gt = groundTruth[i]
             prompt = question + format_instruction
-            pred = itf.call(prompt=question)
+            pred = itf.call(prompt=prompt)
             # pred_ans = itf.extract_answer(pred)
             # gt_clean = itf.extract_answer(gt)
             # tmp = {'Question':question,'Pred':pred,'Pred_ans':pred_ans,'GT':gt,'GT_clean':gt_clean}

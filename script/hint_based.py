@@ -5,7 +5,7 @@ sys.path.append("..")
 from utils import *
 from interface import TextInterface,ResultInterface
 
-hint_example = '''
+hint_template = '''
 Q:Jenna is hemming her prom dress. The dress's hem is 3 feet long. Each stitch Jenna makes is 1/4 inch long. If Jenna makes 24 stitches per minute, how many minutes does it take Jenna to hem her dress?
 
 Hint 1: Convert units
@@ -73,7 +73,7 @@ Include the cost of the first appointment, the insurance payment, and the out-of
 Q:{Question}
 '''
 
-answer_example ='''
+answer_template ='''
 Q:Jenna is hemming her prom dress. The dress's hem is 3 feet long. Each stitch Jenna makes is 1/4 inch long. If Jenna makes 24 stitches per minute, how many minutes does it take Jenna to hem her dress?
 
 Hint 1: Convert units
@@ -246,9 +246,9 @@ if __name__ == "__main__":
     for question in tqdm(questions):
         
         # generate Hints
-        hints = itf.call(hint_example.format(Question = question),temperature=0.8,Rule=hint_generate_rule)
+        hints = itf.call(hint_template.format(Question = question),temperature=0.8,Rule=hint_generate_rule)
         # combine questions and hints to solve problem
-        pred =  itf.call(answer_example.format(Question = question,Hints = hints),Rule=question_generate_rule)
+        pred =  itf.call(answer_template.format(Question = question,Hints = hints),Rule=question_generate_rule)
         
         pred_ans = itf.extract_answer(pred)
         preds.append(pred)
