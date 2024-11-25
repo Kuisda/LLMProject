@@ -1,3 +1,4 @@
 secret.json
 TODO.md
-*.pyc
+__pycache__/
+.DS_Store
