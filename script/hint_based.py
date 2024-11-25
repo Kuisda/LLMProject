@@ -226,7 +226,7 @@ if __name__ == "__main__":
     preds = []
     preds_ans = []
 
-    with open("secret.json", 'r') as f:
+    with open("../secret.json", 'r') as f:
         data = json.load(f)
 
     
@@ -242,24 +242,25 @@ if __name__ == "__main__":
     hint_generate_rule= general_rule + "YOU will be given a mathematical question Q, and you need to generate intermediate hints to approach the answer of the given question Q. Before you begin to solve the question, you are asked to generate some hints for yourself. "
     question_generate_rule = general_rule + "Now,based from following hints that wll help for problem solving,give your final answer about the question."
     
-    #solve each problem though this method
-    for question in tqdm(questions):
-        
+    def hint_base_fn(question:str,itf:TextInterface = itf)->str:
         # generate Hints
-        hints = itf.call(hint_template.format(Question = question),temperature=0.8,Rule=hint_generate_rule)
+        hints = itf.call(hint_template.format(Question = question),temperature=0.8,meta_prompt=hint_generate_rule)
         # combine questions and hints to solve problem
-        pred =  itf.call(answer_template.format(Question = question,Hints = hints),Rule=question_generate_rule)
+        pred  = itf.call(answer_template.format(Question = question,Hints = hints),meta_prompt=question_generate_rule)
+        return pred
+
+    # #solve each problem though this method
+    # for question in tqdm(questions):
         
-        pred_ans = itf.extract_answer(pred)
-        preds.append(pred)
-        preds_ans.append(pred_ans)
+    #     # generate Hints
+    #     hints = itf.call(hint_template.format(Question = question),temperature=0.8,Rule=hint_generate_rule)
+    #     # combine questions and hints to solve problem
+    #     pred =  itf.call(answer_template.format(Question = question,Hints = hints),Rule=question_generate_rule)
+        
+    #     pred_ans = itf.extract_answer(pred)
+    #     preds.append(pred)
+    #     preds_ans.append(pred_ans)
+    
+    filepath = getPredAndWrite(itf,questions[:2],groundTruth[:2],hint_base_fn,begin=0)
     
     
-    rtf = ResultInterface(
-        len(questions),
-        questions,preds,
-        preds_ans,
-        groundTruth,
-        method_name="Native"
-    )
-    print(rtf.acc())

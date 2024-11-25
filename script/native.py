@@ -14,7 +14,7 @@ if __name__ == "__main__":
     preds_ans = []
     
 
-    with open("secret.json", 'r') as f:
+    with open("../secret.json", 'r') as f:
         data = json.load(f)
 
     
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     preds,gt = readFromJsonl(filePath)
     
-    preds_ans,gt = PostHandle(preds,gt)
+    preds_ans,gt = PostHandle("mgsm_en",preds,gt)
     rtf = ResultInterface(
         len(questions),
         questions,preds,
